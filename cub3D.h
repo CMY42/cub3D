@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 16:01:23 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/31 17:26:31 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/08 19:26:12 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,17 @@ typedef struct s_progr {
 	t_image		img;
 	t_vector	img_position;
 }				t_progr;
+
+typedef struct s_map
+{
+	char	*north_texture;
+	char	*south_texture;
+	char	*west_texture;
+	char	*east_texture;
+	int		floor_color;
+	int		ceiling_color;
+	char	**map_array;
+}			t_map;
 
 // ---------------------------------
 // FUNCTIONS

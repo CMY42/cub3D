@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 11:34:14 by cmansey           #+#    #+#             */
-/*   Updated: 2022/11/07 11:10:53 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/07 20:26:06 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <stdio.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 5
+# endif
 
 int		ft_atoi(const char *str);
 void	*ft_bzero(void *s, size_t n);
@@ -51,5 +59,10 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_itoa(int n);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
+char	*get_next_line(int fd);
+size_t	ft_fstrlen(const char *s);
+char	*ft_fstrjoin(char *left_str, char *buff);
+char	*ft_fstrchr(char *s, int c);
+int		ft_sscanf(const char *str, int *r, int *g, int *b);
 
 #endif
