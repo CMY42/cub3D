@@ -1,43 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/24 12:21:36 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/09 16:04:05 by cmansey          ###   ########.fr       */
+/*   Created: 2023/11/09 14:39:52 by cmansey           #+#    #+#             */
+/*   Updated: 2023/11/09 14:39:55 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *str)
+char	*ft_strcpy(char *dst, const char *src)
 {
-	int	i;
-	int	sign;
-	int	nb;
+	int		i;
 
 	i = 0;
-	sign = 1;
-	nb = 0;
-	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == 45)
-		sign *= -1;
-	if (str[i] == 43 || str[i] == 45)
-		i++;
-	while (str[i] >= '0' && str[i] <= '9')
+	while (src[i])
 	{
-		nb = (nb * 10) + (str[i] - '0');
+		dst[i] = src[i];
 		i++;
 	}
-	return (nb *= sign);
+	dst[i] = '\0';
+	return (dst);
 }
-
-/*int main()
-{
-	char *s = "  	+-++-+123456456dsggd";
-	printf("%d\n", (ft_atoi(s)));
-	printf("%d\n", (atoi(s)));
-}*/

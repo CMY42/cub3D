@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 16:01:23 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/08 19:26:12 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/09 16:23:22 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ typedef struct s_map
 	int		floor_color;
 	int		ceiling_color;
 	char	**map_array;
+	int		map_size;
+	int		config_done;
 }			t_map;
 
 // ---------------------------------

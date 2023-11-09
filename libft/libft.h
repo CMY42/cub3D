@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 11:34:14 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/07 20:26:06 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/09 15:46:05 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,7 @@ size_t	ft_fstrlen(const char *s);
 char	*ft_fstrjoin(char *left_str, char *buff);
 char	*ft_fstrchr(char *s, int c);
 int		ft_sscanf(const char *str, int *r, int *g, int *b);
+char	*ft_strcpy(char *dst, const char *src);
+void	*ft_realloc(void *ptr, size_t originalSize, size_t newSize);
 
 #endif
