@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 16:02:19 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/09 18:07:30 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/10 19:13:25 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,164 @@ void	ft_check_args(int argc, char **argv)
 		printf("Error\nInvalid type of file.\nInsert .cub file\n");
 		exit (1);
 	}
+}
+
+int	ft_player_valid(t_map *config)
+{
+	int		i;
+	size_t	j;
+	int		player;
+
+	i = 0;
+	player = 0;
+	while (i < config->map_size)
+	{
+		j = 0;
+		while (config->map_array[i][j] != '\0')
+		{
+			if (config->map_array[i][j] == 'N'
+				|| config->map_array[i][j] == 'S'
+				|| config->map_array[i][j] == 'W'
+				|| config->map_array[i][j] == 'E')
+				player++;
+			j++;
+		}
+		i++;
+	}
+	if (player == 1)
+		return (1);
+	else
+		return (0);
+}
+
+int	save_space_down(t_map *config, int i, size_t j)
+{
+	i++;
+	if (config->map_array[i][j] == '1')
+		return (1);
+	else if (config->map_array[i][j] == ' ')
+	{
+		while (config->map_array[i][j] == ' '
+			&& i <= config->map_size - 1
+			&& config->map_array[i][j + 1] != '0'
+			&& config->map_array[i][j - 1] != '0')
+			i++;
+		if (config->map_array[i][j] == '1')
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return (0);
+}
+
+int	save_space_up(t_map *config, int i, size_t j)
+{
+	i--;
+	if (config->map_array[i][j] == '1')
+		return (1);
+	else if (config->map_array[i][j] == ' ')
+	{
+		while (config->map_array[i][j] == ' ' && i >= 0
+			&& config->map_array[i][j + 1] != '0'
+			&& config->map_array[i][j - 1] != '0')
+			i--;
+		if (config->map_array[i][j] == '1')
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return (0);
+}
+
+int	save_space_horizontal_r(t_map *config, int i, size_t j)
+{
+	j++;
+	if (config->map_array[i][j] == '1')
+		return (1);
+	else if (config->map_array[i][j] == ' ')
+	{
+		while (config->map_array[i][j] == ' ' &&
+			j < ft_strlen(config->map_array[i]) - 1
+			&& config->map_array[i + 1][j] != '0'
+			&& config->map_array[i - 1][j] != '0')
+			j++;
+		if (config->map_array[i][j] == '1')
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return (0);
+}
+
+int	save_space_horizontal_l(t_map *config, int i, size_t j)
+{
+	j--;
+	if (config->map_array[i][j] == '1')
+		return (1);
+	else if (config->map_array[i][j] == ' ')
+	{
+		while (config->map_array[i][j] == ' ' && j > 0
+			&& config->map_array[i + 1][j] != '0'
+			&& config->map_array[i - 1][j] != '0')
+			j--;
+		if (config->map_array[i][j] == '1')
+			return (1);
+		else
+			return (0);
+	}
+	else
+		return (0);
+}
+
+int	ft_map_valid(t_map *config)
+{
+	int		i;
+	size_t	j;
+
+	i = 0;
+	if (ft_player_valid(config) == 1)
+	{
+		while (i < config->map_size)
+		{
+			j = 0;
+			while (j < ft_strlen(config->map_array[i]) - 1)
+			{
+				if (i == 0 || i == config->map_size - 1)
+				{
+					if ((config->map_array[i][j] != '1' && config->map_array[i][j] != ' '))
+						return (0);
+					if (config->map_array[i][j] == ' ' && i == 0)
+						if (save_space_down(config, i, j) == 0)
+							return (0);
+					if (config->map_array[i][j] == ' ' && i == config->map_size - 1)
+						if (save_space_up(config, i, j) == 0)
+							return (0);
+				}
+				else if (i > 0 && i < config->map_size - 1)
+				{
+					if (j == 0 || j == ft_strlen(config->map_array[i]) - 1)
+					{
+						if ((config->map_array[i][j] != '1' && config->map_array[i][j] != ' '))
+							return (0);
+						if (config->map_array[i][j] == ' ' && j == 0)
+							if (save_space_horizontal_r(config, i, j) == 0)
+								return (0);
+						if (config->map_array[i][j] == ' ' && j == ft_strlen(config->map_array[i]) - 1)
+							if (save_space_horizontal_l(config, i, j) == 0)
+								return (0);
+					}
+				}
+				j++;
+			}
+			i++;
+		}
+		return (1);
+	}
+	else
+		return (0);
 }
 
 /*char	*convert_tabs_to_spaces(const char *line)
@@ -374,15 +532,23 @@ int	main(int argc, char **argv)
 	ft_check_args(argc, argv);
 	ft_init(&config);
 	ft_check_map(argv, &config);
-	progr.mlx = mlx_init();
-	progr.window = ft_new_window(progr.mlx, 1980, 1080, "so_long");
-	progr.img = ft_new_sprite(progr.mlx, "xpm/player.xpm");
-	progr.img_position.x = 100;
-	progr.img_position.y = 100;
-	mlx_put_image_to_window(progr.mlx, progr.window.ref,
-		progr.img.ref, progr.img_position.x, progr.img_position.y);
-	mlx_key_hook(progr.window.ref, *ft_input, &progr);
-	mlx_loop_hook(progr.mlx, *ft_anime, &progr);
-	mlx_loop(progr.mlx);
-	return (0);
+	if (ft_map_valid(&config) == 1)
+	{
+		progr.mlx = mlx_init();
+		progr.window = ft_new_window(progr.mlx, 1980, 1080, "so_long");
+		progr.img = ft_new_sprite(progr.mlx, "xpm/player.xpm");
+		progr.img_position.x = 100;
+		progr.img_position.y = 100;
+		mlx_put_image_to_window(progr.mlx, progr.window.ref,
+			progr.img.ref, progr.img_position.x, progr.img_position.y);
+		mlx_key_hook(progr.window.ref, *ft_input, &progr);
+		mlx_loop_hook(progr.mlx, *ft_anime, &progr);
+		mlx_loop(progr.mlx);
+		return (0);
+	}
+	else
+	{
+		printf("Error\nMap is not valid.\n");
+		exit (1);
+	}
 }
