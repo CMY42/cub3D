@@ -6,46 +6,56 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 18:33:51 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/17 18:48:14 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/17 19:44:00 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-char	*skip_spaces(char *str)
+char	*realloc_map_array(char *line, char ***map_array, int *size)
 {
-	while (*str && (*str == ' ' || *str == '\t'))
-		str++;
-	return (str);
-}
-
-char	**parse_map(char *line, char **map_array, int *size)
-{
-	char	**temp;
-	int		len;
 	char	*converted_line;
+	char	**temp;
 
 	converted_line = convert_tabs_to_spaces(line);
 	if (!converted_line)
 		return (NULL);
-	len = ft_strlen(converted_line);
-	temp = ft_realloc(map_array, sizeof(char *) * (*size),
-			sizeof(char *) * (*size + 1));
+	temp = ft_realloc(*map_array, sizeof(char *)
+			* (*size), sizeof(char *) * (*size + 1));
 	if (!temp)
 	{
-		free(temp);
+		free(converted_line);
 		return (NULL);
 	}
-	map_array = temp;
+	*map_array = temp;
+	return (converted_line);
+}
+
+char	**add_convline_to_map(char *converted_line, char **map_array, int *size)
+{
+	int	len;
+
+	len = ft_strlen(converted_line);
 	map_array[*size] = malloc(len + 1);
 	if (!map_array[*size])
 	{
-		free(map_array[*size]);
+		free(converted_line);
 		return (NULL);
 	}
 	ft_strcpy(map_array[*size], converted_line);
+	free(converted_line);
 	(*size)++;
 	return (map_array);
+}
+
+char	**parse_map(char *line, char **map_array, int *size)
+{
+	char	*converted_line;
+
+	converted_line = realloc_map_array(line, &map_array, size);
+	if (!converted_line)
+		return (NULL);
+	return (add_convline_to_map(converted_line, map_array, size));
 }
 
 int	is_config_complete(t_map *config)

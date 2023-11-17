@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 18:39:02 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/17 19:10:55 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/17 19:44:04 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ int	ft_player_valid(t_map *config)
 		return (1);
 	else
 		return (0);
+}
+
+char	*skip_spaces(char *str)
+{
+	while (*str && (*str == ' ' || *str == '\t'))
+		str++;
+	return (str);
 }
 
 void	free_copied_map_array(char **map_copy, int map_size)
