@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 16:04:31 by cmansey           #+#    #+#             */
-/*   Updated: 2023/10/31 17:19:22 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/17 18:48:04 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,12 @@ int	ft_input(int key, t_progr *progr)
 		progr->img_position.y -= progr->img.size.y;
 	else if (key == 53 || key == 65307)
 		exit(0);
-			/*change color based on keys R, G and B.
-	else if (key == 114)
-		turn_img_to_color(&progr->img, new_color(255,0,0,0));
-	else if (key == 103)
-		turn_img_to_color(&progr->img, new_color(0,255,0,0));
-	else if (key == 98)
-		turn_img_to_color(&progr->img, new_color(0,0,255,0));*/
+	else if (key == 114 || key == 65470)
+		turn_img_to_color(&progr->img, new_color(255, 0, 0, 0));
+	else if (key == 103 || key == 65471)
+		turn_img_to_color(&progr->img, new_color(0, 255, 0, 0));
+	else if (key == 98 || key == 65473)
+		turn_img_to_color(&progr->img, new_color(0, 0, 255, 0));
 	mlx_put_image_to_window(progr->mlx, progr->window.ref,
 		progr->img.ref, progr->img_position.x, progr->img_position.y);
 	printf("Key pressed -> %d\n", key);
