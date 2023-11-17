@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 16:02:19 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/10 19:13:25 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/17 18:28:20 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_player_valid(t_map *config)
 		return (0);
 }
 
-int	save_space_down(t_map *config, int i, size_t j)
+/*int	save_space_down(t_map *config, int i, size_t j)
 {
 	i++;
 	if (config->map_array[i][j] == '1')
@@ -62,7 +62,7 @@ int	save_space_down(t_map *config, int i, size_t j)
 	else if (config->map_array[i][j] == ' ')
 	{
 		while (config->map_array[i][j] == ' '
-			&& i <= config->map_size - 1
+			&& i < config->map_size
 			&& config->map_array[i][j + 1] != '0'
 			&& config->map_array[i][j - 1] != '0')
 			i++;
@@ -82,7 +82,7 @@ int	save_space_up(t_map *config, int i, size_t j)
 		return (1);
 	else if (config->map_array[i][j] == ' ')
 	{
-		while (config->map_array[i][j] == ' ' && i >= 0
+		while (config->map_array[i][j] == ' ' && i > 0
 			&& config->map_array[i][j + 1] != '0'
 			&& config->map_array[i][j - 1] != '0')
 			i--;
@@ -103,7 +103,7 @@ int	save_space_horizontal_r(t_map *config, int i, size_t j)
 	else if (config->map_array[i][j] == ' ')
 	{
 		while (config->map_array[i][j] == ' ' &&
-			j < ft_strlen(config->map_array[i]) - 1
+			j < (ft_strlen(config->map_array[i]))
 			&& config->map_array[i + 1][j] != '0'
 			&& config->map_array[i - 1][j] != '0')
 			j++;
@@ -125,16 +125,26 @@ int	save_space_horizontal_l(t_map *config, int i, size_t j)
 	{
 		while (config->map_array[i][j] == ' ' && j > 0
 			&& config->map_array[i + 1][j] != '0'
-			&& config->map_array[i - 1][j] != '0')
+			&& config->map_array[i - 1][j] != '0'
+			&& config->map_array[i + 1][j] != '\0'
+			&& config->map_array[i - 1][j] != '\0')
 			j--;
 		if (config->map_array[i][j] == '1')
 			return (1);
+		else if (config->map_array[i][j] == '0')
+		{
+			if (config->map_array[i + 1][j] == '1' && config->map_array[i - 1][j] == '1')
+				return (1);
+			else
+				return (0);
+		}
 		else
 			return (0);
 	}
 	else
 		return (0);
 }
+
 
 int	ft_map_valid(t_map *config)
 {
@@ -162,10 +172,20 @@ int	ft_map_valid(t_map *config)
 				}
 				else if (i > 0 && i < config->map_size - 1)
 				{
-					if (j == 0 || j == ft_strlen(config->map_array[i]) - 1)
+					if (j == 0 || j == ft_strlen(config->map_array[i]) - 2)
 					{
 						if ((config->map_array[i][j] != '1' && config->map_array[i][j] != ' '))
 							return (0);
+						if (config->map_array[i][j] == '1' && config->map_array[i][j + 1] != '1' && config->map_array[i][j - 1] != '1' && config->map_array[i + 1][j] != '1')
+								return (0);
+						if (config->map_array[i][j] == '1' && config->map_array[i + 1][j] != '1' && config->map_array[i - 1][j] != '1' && config->map_array[i][j - 1] != '1')
+							{
+								//printf("map_array[%d][%zu]: %c\n", i, j, config->map_array[i][j]);
+							return (0);
+							}
+						if (config->map_array[i][j] == '1' && config->map_array[i][j - 1] == ' ')
+							if (save_space_horizontal_l(config, i, j) == 0)
+								return (0);
 						if (config->map_array[i][j] == ' ' && j == 0)
 							if (save_space_horizontal_r(config, i, j) == 0)
 								return (0);
@@ -182,48 +202,197 @@ int	ft_map_valid(t_map *config)
 	}
 	else
 		return (0);
+}*/
+
+/*void	flood_fill_util(char **map, int x, int y, int map_size)
+{
+	if (x < 0 || x >= map_size || y < 0 || y >= (int)ft_strlen(map[x])
+		|| map[x][y] == '1' || map[x][y] == 'v')
+		return ;
+
+	if (map[x][y] == '0' || map[x][y] == 'N' || map[x][y] == 'S'
+		|| map[x][y] == 'W' || map[x][y] == 'E')
+		map[x][y] = 'v';
+
+	flood_fill_util(map, x + 1, y, map_size);
+	flood_fill_util(map, x - 1, y, map_size);
+	flood_fill_util(map, x, y + 1, map_size);
+	flood_fill_util(map, x, y - 1, map_size);
 }
 
-/*char	*convert_tabs_to_spaces(const char *line)
+// Trouver la position du joueur
+// Appliquer le flood fill à partir de la position du joueur
+// Vérifier s'il y a des '0' non visités
+// Libération de la mémoire
+int	flood_fill(t_map *config, char **map_copy)
 {
-	int		tab_count;
 	int		i;
 	int		j;
-	int		k;
-	int		new_len;
-	char	*new_line;
 
-	tab_count = 0;
 	i = 0;
-	j = 0;
-	k = 0;
-	while (line[i] != '\0')
+	while (i < config->map_size)
 	{
-		if (line[i++] == '\t')
-			tab_count++;
-	}
-	new_len = i + 3 * tab_count;
-	new_line = malloc(new_len + 1);
-	if (!new_line)
-		return (NULL);
-
-	while (line[j] != '\0')
-	{
-		if (line[j] == '\t')
+		j = 0;
+		while (j < (int)ft_strlen(config->map_array[i]))
 		{
-			new_line[k++] = ' ';
-			new_line[k++] = ' ';
-			new_line[k++] = ' ';
-			new_line[k] = ' ';
+			if (ft_strchr("NSEW", config->map_array[i][j]))
+			{
+				config->player_pos_x = i;
+				config->player_pos_y = j;
+				break ;
+			}
+			j++;
+		}
+		if (config->player_pos_x != -1)
+			break ;
+		i++;
+	}
+	if (config->player_pos_x != -1 && config->player_pos_y != -1)
+		flood_fill_util(map_copy, config->player_pos_x,
+			config->player_pos_y, config->map_size);
+	i = 0;
+	while (i < config->map_size)
+	{
+		j = 0;
+		while (j < (int)ft_strlen(config->map_array[i]))
+		{
+			if (config->map_array[i][j] == '0' && map_copy[i][j] != 'v')
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}*/
+
+// ATTENTION GESTION ESPACE A VERIFIER !!!!!!!!!!!!!!!!!!!!!!!!
+
+// Vérifiez si vous êtes en dehors des limites de la carte
+// Si la case est déjà visitée ou c'est un mur, elle est valide
+int	flood_fill_util(char **map, int x, int y, int map_size)
+{
+	if (x < 0 || x >= map_size || y < 0 || y >= (int)ft_strlen(map[x])
+		|| map[x][y] == ' ')
+		return (0);
+
+	if (map[x][y] == 'v' || map[x][y] == '1')
+		return (1);
+	map[x][y] = 'v';
+
+	if (!flood_fill_util(map, x + 1, y, map_size))
+		return (0);
+	if (!flood_fill_util(map, x - 1, y, map_size))
+		return (0);
+	if (!flood_fill_util(map, x, y + 1, map_size))
+		return (0);
+	if (!flood_fill_util(map, x, y - 1, map_size))
+		return (0);
+	return (1);
+}
+
+int	flood_fill(t_map *config, char **map_copy)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (i < config->map_size)
+	{
+		j = 0;
+		while (j < (int)ft_strlen(config->map_array[i]))
+		{
+			if (ft_strchr("NSEW", config->map_array[i][j]))
+			{
+				config->player_pos_x = i;
+				config->player_pos_y = j;
+				break ;
+			}
+			j++;
+		}
+		if (config->player_pos_x != -1)
+			break ;
+		i++;
+	}
+	if (config->player_pos_x != -1 && config->player_pos_y != -1)
+		return (flood_fill_util(map_copy, config->player_pos_x,
+				config->player_pos_y, config->map_size));
+	return (0);
+}
+
+
+void	free_copied_map_array(char **map_copy, int map_size)
+{
+	int	i;
+
+	if (map_copy == NULL)
+		return ;
+	i = 0;
+	while (i < map_size)
+	{
+		free(map_copy[i]);
+		i++;
+	}
+	free(map_copy);
+}
+
+char	**copy_map_array(t_map *config)
+{
+	char	**map_copy;
+	int		i;
+
+	if (config == NULL || config->map_array == NULL)
+	{
+		printf("Error\nMap is not valid.\n");
+		return (NULL);
+	}
+	map_copy = malloc(config->map_size * sizeof(char *));
+	if (!map_copy)
+	{
+		printf("Error\nMemory allocation failed for map copy.\n");
+		return (NULL);
+	}
+	i = 0;
+	while (i < config->map_size)
+	{
+		map_copy[i] = malloc((ft_strlen(config->map_array[i]) + 1)
+				* sizeof(char));
+		if (!map_copy[i])
+		{
+			while (--i >= 0)
+				free(map_copy[i]);
+			free(map_copy);
+			return (NULL);
+		}
+		strcpy(map_copy[i], config->map_array[i]);
+		i++;
+	}
+	return (map_copy);
+}
+
+int	ft_map_valid(t_map *config)
+{
+	char	**map_copy;
+	int		is_valid;
+
+	if (ft_player_valid(config) == 1)
+	{
+		map_copy = copy_map_array(config);
+		if (map_copy)
+		{
+			is_valid = flood_fill(config, map_copy);
+			printf("is_valid: %d\n", is_valid);
+			free_copied_map_array(map_copy, config->map_size);
+			return (is_valid);
 		}
 		else
-			new_line[k] = line[j];
-		j++;
-		k++;
+		{
+			printf("Error\nMemory allocation failed for map copy.\n");
+			return (0);
+		}
 	}
-	new_line[new_len] = '\0';
-	return (new_line);
-}*/
+	else
+		return (0);
+}
 
 int	starts_with(const char *line, const char *prefix)
 {
@@ -305,6 +474,8 @@ void	ft_init(t_map *config)
 	config->map_array = NULL;
 	config->map_size = 0;
 	config->config_done = 0;
+	config->player_pos_x = -1;
+	config->player_pos_y = -1;
 }
 
 char	*skip_spaces(char *str)
@@ -313,28 +484,6 @@ char	*skip_spaces(char *str)
 		str++;
 	return (str);
 }
-
-/*char	**parse_map(char *line, char **map_array)
-{
-	static int	i = 0;
-	int			len;
-
-	printf("line: %s\n", line);
-	if (!line)
-		return (NULL);
-	len = ft_strlen(line);
-	printf("len: %d\n", len);
-	map_array[i] = (char *)malloc(sizeof(char) * (len + 1));
-	if (!map_array[i])
-	{
-		free(map_array);
-		return (NULL);
-	}
-	ft_strcpy(map_array[i], line);
-	printf("map_array[%d]: %s\n", i, map_array[i]);
-	i++;
-	return (map_array);
-}*/
 
 char	**parse_map(char *line, char **map_array, int *size)
 {
@@ -345,7 +494,7 @@ char	**parse_map(char *line, char **map_array, int *size)
 	converted_line = convert_tabs_to_spaces(line);
 	if (!converted_line)
 		return (NULL);
-	len = strlen(converted_line);
+	len = ft_strlen(converted_line);
 	temp = ft_realloc(map_array, sizeof(char *) * (*size),
 			sizeof(char *) * (*size + 1));
 	if (!temp)
@@ -360,7 +509,7 @@ char	**parse_map(char *line, char **map_array, int *size)
 		free(map_array[*size]);
 		return (NULL);
 	}
-	strcpy(map_array[*size], converted_line);
+	ft_strcpy(map_array[*size], converted_line);
 	(*size)++;
 	return (map_array);
 }
@@ -387,43 +536,6 @@ int	parse_color(char *color_string)
 		exit(EXIT_FAILURE);
 	}
 }
-
-/*int	parse_line(char *line, t_map *config)
-{
-	if (config->north_texture != NULL && config->south_texture != NULL
-		&& config->west_texture != NULL && config->east_texture != NULL
-		&& config->floor_color != -1 && config->ceiling_color != -1)
-		config->config_done = 1;
-	if (config->config_done == 0)
-		line = skip_spaces(line);
-	if (line[0] == '\n' || line[0] == '\0')
-		return (0);
-	else if (line[0] == 'N' && line[1] == 'O' && config->north_texture == NULL)
-		config->north_texture = ft_strdup(skip_spaces(&line[2]));
-	else if (line[0] == 'S' && line[1] == 'O' && config->south_texture == NULL)
-		config->south_texture = ft_strdup(skip_spaces(&line[2]));
-	else if (line[0] == 'W' && line[1] == 'E' && config->west_texture == NULL)
-		config->west_texture = ft_strdup(skip_spaces(&line[2]));
-	else if (line[0] == 'E' && line[1] == 'A' && config->east_texture == NULL)
-		config->east_texture = ft_strdup(skip_spaces(&line[2]));
-	else if (line[0] == 'F' && line[1] == ' ' && config->floor_color == -1)
-		config->floor_color = parse_color(skip_spaces(&line[2]));
-	else if (line[0] == 'C' && line[1] == ' ' && config->ceiling_color == -1)
-		config->ceiling_color = parse_color(skip_spaces(&line[2]));
-	else if (config->config_done == 1)
-	{
-		if (ft_isdigit(line[0]) || line[0] == ' ' || line[0] == '\t')
-			config->map_array = parse_map(line, config->map_array, &config->map_size);
-		else
-			return (-1);
-	}
-	else
-	{
-		printf("Error\nMissing configuration element\n");
-		exit(EXIT_FAILURE);
-	}
-	return (0);
-}*/
 
 int	process_texture_and_color(char *line, t_map *config)
 {

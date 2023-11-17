@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 16:01:23 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/09 16:23:22 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/17 15:14:38 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ typedef struct s_map
 	char	**map_array;
 	int		map_size;
 	int		config_done;
+	int		player_pos_x;
+	int		player_pos_y;
 }			t_map;
 
 // ---------------------------------
