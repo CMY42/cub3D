@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 18:30:32 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/17 19:44:01 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/23 15:30:26 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,28 @@
 
 int	process_texture_and_color(char *line, t_map *config)
 {
-	if (starts_with(line, "NO") && config->north_texture == NULL)
-		config->north_texture = ft_strdup(skip_spaces(&line[2]));
-	else if (starts_with(line, "SO") && config->south_texture == NULL)
-		config->south_texture = ft_strdup(skip_spaces(&line[2]));
-	else if (starts_with(line, "WE") && config->west_texture == NULL)
-		config->west_texture = ft_strdup(skip_spaces(&line[2]));
-	else if (starts_with(line, "EA") && config->east_texture == NULL)
-		config->east_texture = ft_strdup(skip_spaces(&line[2]));
+	if (starts_with(line, "NO") && config->north_texture_path == NULL)
+		config->north_texture_path = ft_strdup(skip_spaces(&line[2]));
+	else if (starts_with(line, "SO") && config->south_texture_path == NULL)
+		config->south_texture_path = ft_strdup(skip_spaces(&line[2]));
+	else if (starts_with(line, "WE") && config->west_texture_path == NULL)
+		config->west_texture_path = ft_strdup(skip_spaces(&line[2]));
+	else if (starts_with(line, "EA") && config->east_texture_path == NULL)
+		config->east_texture_path = ft_strdup(skip_spaces(&line[2]));
 	else if (starts_with(line, "F ") && config->floor_color == -1)
 		config->floor_color = parse_color(skip_spaces(&line[2]));
 	else if (starts_with(line, "C ") && config->ceiling_color == -1)
 		config->ceiling_color = parse_color(skip_spaces(&line[2]));
 	else
 		return (0);
+	if (config->north_texture_path != NULL)
+		trim_trailing_whitespace(config->north_texture_path);
+	if (config->south_texture_path != NULL)
+		trim_trailing_whitespace(config->south_texture_path);
+	if (config->west_texture_path != NULL)
+		trim_trailing_whitespace(config->west_texture_path);
+	if (config->east_texture_path != NULL)
+		trim_trailing_whitespace(config->east_texture_path);
 	return (1);
 }
 
@@ -77,10 +85,10 @@ void	parse_file(int fd, t_map *config)
 		free(line);
 		temp_line = get_next_line(fd);
 	}
-	printf("North texture: %s\n", config->north_texture);
-	printf("South texture: %s\n", config->south_texture);
-	printf("West texture: %s\n", config->west_texture);
-	printf("East texture: %s\n", config->east_texture);
+	printf("North texture: %s\n", config->north_texture_path);
+	printf("South texture: %s\n", config->south_texture_path);
+	printf("West texture: %s\n", config->west_texture_path);
+	printf("East texture: %s\n", config->east_texture_path);
 	printf("Floor color: %d\n", config->floor_color);
 	printf("Ceiling color: %d\n", config->ceiling_color);
 	printf("Map size: %d\n", config->map_size);

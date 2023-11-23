@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 18:33:51 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/17 19:44:00 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/21 19:10:52 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ char	**parse_map(char *line, char **map_array, int *size)
 
 int	is_config_complete(t_map *config)
 {
-	return (config->north_texture != NULL && config->south_texture != NULL
-		&& config->west_texture != NULL && config->east_texture != NULL
+	return (config->north_texture_path != NULL && config->south_texture_path != NULL
+		&& config->west_texture_path != NULL && config->east_texture_path != NULL
 		&& config->floor_color != -1 && config->ceiling_color != -1);
 }
 

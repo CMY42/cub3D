@@ -6,13 +6,13 @@
 #    By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 16:04:14 by cmansey           #+#    #+#              #
-#    Updated: 2023/11/17 19:44:07 by cmansey          ###   ########.fr        #
+#    Updated: 2023/11/21 19:39:26 by cmansey          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
 SRC = cub3D.c window.c image.c color.c hooks.c loop.c parsing_file1.c parsing_file2.c \
-tab_to_space.c check_map.c utils.c
+tab_to_space.c check_map.c utils.c textures.c
 OBJ = $(SRC:.c=.o)
 
 CC = gcc

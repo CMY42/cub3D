@@ -6,7 +6,7 @@
 /*   By: cmansey <marvin@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 16:02:19 by cmansey           #+#    #+#             */
-/*   Updated: 2023/11/17 18:51:40 by cmansey          ###   ########.fr       */
+/*   Updated: 2023/11/23 15:30:32 by cmansey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void	ft_check_args(int argc, char **argv)
 
 void	ft_init(t_map *config)
 {
-	config->north_texture = NULL;
-	config->south_texture = NULL;
-	config->west_texture = NULL;
-	config->east_texture = NULL;
+	config->north_texture_path = NULL;
+	config->south_texture_path = NULL;
+	config->west_texture_path = NULL;
+	config->east_texture_path = NULL;
 	config->floor_color = -1;
 	config->ceiling_color = -1;
 	config->map_array = NULL;
@@ -49,9 +49,14 @@ int	main(int argc, char **argv)
 	ft_check_args(argc, argv);
 	ft_init(&config);
 	ft_check_file(argv, &config);
-	if (ft_map_valid(&config) == 1)
+	progr.mlx = mlx_init();
+	if (ft_map_valid(&config) == 1 && ft_textures(&config, &progr) == 1)
 	{
-		progr.mlx = mlx_init();
+		printf("pixel color: %d\n", get_pixel_color(&config.north_texture, 0, 0));
+		printf("pixel color: %d\n", get_pixel_color(&config.north_texture, 0, 1));
+		printf("pixel color: %d\n", get_pixel_color(&config.north_texture, 0, 2));
+		printf("pixel color: %d\n", get_pixel_color(&config.north_texture, 1, 0));
+		printf("pixel color: %d\n", get_pixel_color(&config.north_texture, 2, 0));
 		progr.window = ft_new_window(progr.mlx, 1980, 1080, "so_long");
 		progr.img = ft_new_sprite(progr.mlx, "xpm/player.xpm");
 		progr.img_position.x = 100;
